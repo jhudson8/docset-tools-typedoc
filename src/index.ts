@@ -1,21 +1,6 @@
-import {
-  Plugin,
-  normalizePath,
-  getKnownType,
-  DocsetEntries,
-  DocsetEntryType,
-} from "docset-tools-types";
-import {
-  existsSync,
-  readdirSync,
-  readFileSync,
-  writeFileSync,
-  lstatSync,
-  ensureDirSync,
-} from "fs-extra";
+import { Plugin, normalizePath } from "docset-tools-types";
 import kinds from "./kinds";
-import { join, basename } from "path";
-import template from "./template";
+import { join } from "path";
 import { TypescriptMetadata } from "./types";
 const Typedoc = require("typedoc");
 
@@ -132,10 +117,6 @@ const plugin: Plugin = {
       console.error(e);
     }
 
-    await include({
-      path: join(__dirname, "../assets"),
-      rootDirName: "typedoc",
-    });
     await include({
       path: tempDir,
       rootDirName: "typedoc",
