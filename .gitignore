@@ -1,3 +1,6 @@
+.DS_Store
+test/test.docset
+
 # Logs
 logs
 *.log

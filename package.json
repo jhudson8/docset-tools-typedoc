@@ -1,0 +1,34 @@
+{
+  "name": "docset-tools-typedoc",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "rm -rf ./dist && tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jhudson8/docset-tools-typedoc.git"
+  },
+  "keywords": [
+    "docset-tools"
+  ],
+  "author": "Joe Hudson <joehud@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jhudson8/docset-tools-typedoc/issues"
+  },
+  "homepage": "https://github.com/jhudson8/docset-tools-typedoc#readme",
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.1",
+    "@types/node": "^14.0.27",
+    "docset-tools-creator": "0.0.2",
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "docset-tools-types": "0.0.15",
+    "fs-extra": "^9.0.1",
+    "typedoc": "^0.17.0-3"
+  }
+}
