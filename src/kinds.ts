@@ -3,114 +3,114 @@ import { DocsetEntryType } from "docset-tools-types";
 export interface KindValue {
   folder?: string;
   doContinue: boolean;
-  zealEntryName: DocsetEntryType;
+  docsetEntryType: DocsetEntryType;
 }
 
 const kinds: Record<string, KindValue> = {
   Global: {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Section,
+    docsetEntryType: DocsetEntryType.Section,
   },
   "External Module": {
     folder: "modules",
     doContinue: true,
-    zealEntryName: DocsetEntryType.Module,
+    docsetEntryType: DocsetEntryType.Module,
   },
   Module: {
     folder: "modules",
     doContinue: true,
-    zealEntryName: DocsetEntryType.Module,
+    docsetEntryType: DocsetEntryType.Module,
   },
   Reference: {
     folder: "modules",
     doContinue: true,
-    zealEntryName: DocsetEntryType.Module,
+    docsetEntryType: DocsetEntryType.Module,
   },
   Enum: {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Enum,
+    docsetEntryType: DocsetEntryType.Enum,
   },
   "Enum member": {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Enum,
+    docsetEntryType: DocsetEntryType.Enum,
   },
   Variable: {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Variable,
+    docsetEntryType: DocsetEntryType.Variable,
   },
   Function: {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Function,
+    docsetEntryType: DocsetEntryType.Function,
   },
   Class: {
     folder: "classes",
     doContinue: true,
-    zealEntryName: DocsetEntryType.Class,
+    docsetEntryType: DocsetEntryType.Class,
   },
   Interface: {
     folder: "interfaces",
     doContinue: true,
-    zealEntryName: DocsetEntryType.Interface,
+    docsetEntryType: DocsetEntryType.Interface,
   },
   Constructor: {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Constructor,
+    docsetEntryType: DocsetEntryType.Constructor,
   },
   Property: {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Property,
+    docsetEntryType: DocsetEntryType.Property,
   },
   Method: {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Method,
+    docsetEntryType: DocsetEntryType.Method,
   },
   "Call signature": {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Section,
+    docsetEntryType: DocsetEntryType.Section,
   },
   "Index signature": {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Section,
+    docsetEntryType: DocsetEntryType.Section,
   },
   "Constructor signature": {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Section,
+    docsetEntryType: DocsetEntryType.Section,
   },
   Parameter: {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Parameter,
+    docsetEntryType: DocsetEntryType.Parameter,
   },
   "Type literal": {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Type,
+    docsetEntryType: DocsetEntryType.Type,
   },
   "Type parameter": {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Type,
+    docsetEntryType: DocsetEntryType.Type,
   },
   Accessor: {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Section,
+    docsetEntryType: DocsetEntryType.Section,
   },
   "Get signature": {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Section,
+    docsetEntryType: DocsetEntryType.Section,
   },
   "Set signature": {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Section,
+    docsetEntryType: DocsetEntryType.Section,
   },
   "Object literal": {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Object,
+    docsetEntryType: DocsetEntryType.Object,
   },
   "Type alias": {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Section,
+    docsetEntryType: DocsetEntryType.Section,
   },
   Event: {
     doContinue: false,
-    zealEntryName: DocsetEntryType.Event,
+    docsetEntryType: DocsetEntryType.Event,
   },
 };
 export default kinds;

@@ -1,4 +1,4 @@
-import { Plugin, normalizePath } from "docset-tools-types";
+import { Plugin, normalizePath, DocsetEntryType } from "docset-tools-types";
 import kinds from "./kinds";
 import { join } from "path";
 import { TypescriptMetadata } from "./types";
@@ -25,7 +25,6 @@ const plugin: Plugin = {
 
     const tempDir = await createTmpFolder();
     const rtn: any = {};
-    const links: Record<string, string> = {};
     const project = app.convert(app.expandInputFiles(entryPoints));
     if (!project) {
       throw new Error(
@@ -44,9 +43,15 @@ const plugin: Plugin = {
     }: {
       data: TypescriptMetadata;
       moduleName?: string;
-      parent?: { name: string; path: string };
+      parent?: {
+        name: string;
+        baseUrl: string;
+        docsetEntryType: DocsetEntryType;
+        level: number;
+        data: TypescriptMetadata;
+        folder: string;
+      };
     }) => {
-      console.log("\n\n", data);
       const kind = data.kindString;
       if (!kind && data.children) {
         // root node
@@ -62,46 +67,64 @@ const plugin: Plugin = {
           return;
         }
 
-        if (!rtn[dictValue.zealEntryName]) {
-          rtn[dictValue.zealEntryName] = {};
-        }
-        let name: string;
-        const dataName = data.name.replace(/^"/g, "").replace(/"$/, "");
+        let folder = dictValue.folder;
+        let name = data.name.replace(/^"/g, "").replace(/"$/, "");
+        let pathName = name.replace(/\/|\./g, "_").toLowerCase();
+        const useParentInfo =
+          parent && !parent.data.kindString.match(/module/i);
         if (kind === "External module") {
           // special case
-          name = dataName.substring(1).replace(/\/|\./g, "_");
-          const url = `${dictValue.folder}/${moduleName}.html`;
-          moduleName = `_${name}_`.toLocaleLowerCase();
-          links[`${name}@${dictValue.zealEntryName}`] = url;
-          rtn[dictValue.zealEntryName][name] = url;
-        } else if (!dictValue.folder) {
-          // not in a subfolder
-          name = dataName;
-          const url = `${dictValue.folder}/${name.toLocaleLowerCase()}.html`;
-          links[`${name}@${dictValue.zealEntryName}`] = url;
-          rtn[dictValue.zealEntryName][name] = url;
-        } else {
-          // in a subfolder
-          name = dataName;
-          const url = parent
-            ? `${dictValue.folder}/${parent.path}.${name.toLowerCase()}.html`
-            : `${dictValue.folder}/_${name.toLowerCase()}_.html`;
-          links[`${name}@${dictValue.zealEntryName}`] = url;
-          rtn[dictValue.zealEntryName][name] = url;
+          pathName = pathName.substring(1);
         }
+
+        let baseUrl = `_${pathName}_`;
+        let url = `typedoc/${dictValue.folder}/${baseUrl}.html`;
+        let type: DocsetEntryType =
+          useParentInfo && parent
+            ? parent.docsetEntryType
+            : dictValue.docsetEntryType;
+
+        if (parent) {
+          if (useParentInfo) {
+            name = `${parent.name}.${name}`;
+            type = parent.docsetEntryType;
+            folder = parent.folder;
+          }
+
+          if (!dictValue.folder) {
+            folder = parent.folder;
+            baseUrl = parent.baseUrl;
+            if (parent.level < 2) {
+              url = `typedoc/${folder}/${parent.baseUrl}.html#${pathName}`;
+            } else {
+              url = `typedoc/${folder}/${parent.baseUrl}#${pathName}`;
+            }
+          } else if (!parent.baseUrl.includes(".html")) {
+            url = `typedoc/${folder}/${parent.baseUrl}.${pathName}.html`;
+            baseUrl = `${parent.baseUrl}.${pathName}.html`;
+          } else if (!parent.baseUrl.includes("#")) {
+            url = `typedoc/${folder}/${parent.baseUrl}#${pathName}`;
+            baseUrl = parent.baseUrl;
+          }
+        }
+
+        if (!rtn[type]) {
+          rtn[type] = {};
+        }
+        rtn[type][name] = url;
 
         if (dictValue.doContinue && data.children) {
           data.children.forEach((child) => {
-            const path = links[`${name}@${dictValue.zealEntryName}`];
-            if (!path) {
-              console.log(path, " - ", links);
-            }
             iterate({
               data: child,
               moduleName,
               parent: {
-                path,
                 name,
+                docsetEntryType: type,
+                baseUrl,
+                level: parent ? parent.level + 1 : 1,
+                data,
+                folder,
               },
             });
           });
@@ -124,6 +147,9 @@ const plugin: Plugin = {
 
     return {
       entries: rtn,
+      plist: {
+        dashIncludeCSS: ".menu { display: none };",
+      },
     };
   },
 };
