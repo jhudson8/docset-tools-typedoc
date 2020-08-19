@@ -51,7 +51,7 @@ const plugin: Plugin = {
       indexOnly,
     }: {
       data: TypescriptMetadata;
-      parent: TypescriptMetadata;
+      parent?: TypescriptMetadata;
       indexOnly?: boolean;
     }) => {
       if (indexOnly) {
@@ -144,7 +144,7 @@ const plugin: Plugin = {
           pathName = pathName.substring(1);
         }
 
-        let baseUrl = `_${pathName}_`;
+        let baseUrl = pathName;
         let url = `typedoc/${dictValue.folder}/${baseUrl}.html`;
         let type: DocsetEntryType =
           useParentInfo && parent
@@ -202,6 +202,8 @@ const plugin: Plugin = {
     };
     const data = require(jsonFile);
     try {
+      iterateForDiscovery({ data, indexOnly: true });
+      iterateForDiscovery({ data });
       iterate({
         data,
       });
@@ -222,9 +224,6 @@ const plugin: Plugin = {
 
     return {
       entries: rtn,
-      plist: {
-        dashIncludeCSS: ".menu { display: none };",
-      },
     };
   },
 };
