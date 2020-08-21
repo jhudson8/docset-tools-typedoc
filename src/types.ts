@@ -5,6 +5,7 @@ export interface TypescriptMetadata {
   children?: TypescriptMetadata[];
   flags: {
     isExported?: boolean;
+    isPrivate?: boolean;
   };
   target: number;
 }

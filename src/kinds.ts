@@ -106,7 +106,7 @@ const kinds: Record<string, KindValue> = {
   },
   "Type alias": {
     doContinue: false,
-    docsetEntryType: DocsetEntryType.Section,
+    docsetEntryType: DocsetEntryType.Type,
   },
   Event: {
     doContinue: false,

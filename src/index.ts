@@ -66,7 +66,7 @@ const plugin: Plugin = {
             // find all the exported modules
             for (let j = 0; j < child.children.length; j++) {
               const subChild = child.children[j];
-              if (subChild.flags.isExported) {
+              if (subChild.flags.isExported || !subChild.flags.isPrivate) {
                 keepers[subChild.target || subChild.id] = {
                   id: subChild.target || subChild.id,
                   exportedAs: subChild.name,
