@@ -2,3 +2,7 @@ test
 .gitignore
 package-lock.json
 tsconfig.json
+yarn-error.log
+yarn.lock
+package-lock.json
+.DS_Store

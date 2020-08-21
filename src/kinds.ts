@@ -102,7 +102,7 @@ const kinds: Record<string, KindValue> = {
   },
   "Object literal": {
     doContinue: false,
-    docsetEntryType: DocsetEntryType.Object,
+    docsetEntryType: DocsetEntryType.Variable,
   },
   "Type alias": {
     doContinue: false,
