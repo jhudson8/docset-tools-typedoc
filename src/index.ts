@@ -86,9 +86,10 @@ const plugin: Plugin = {
       }
       if (data.children) {
         // we want anything except index (because we already got that)
+        const shouldChildrenBeIncluded = keepers[data.id] || isParentIncluded;
         for (let i = 0; i < data.children.length; i++) {
           const child = data.children[i];
-          if (isParentIncluded) {
+          if (shouldChildrenBeIncluded) {
             keepers[child.id] =
               keepers[child.id] || child.flags.isExported
                 ? { id: child.id }
@@ -137,6 +138,7 @@ const plugin: Plugin = {
           name = isKeeper.exportedAs;
         }
         let pathName = name.replace(/\/|\./g, "_").toLowerCase();
+        name = name.replace(/^_/, "").replace(/_$/, "");
         const useParentInfo =
           parent && !parent.data.kindString.match(/module/i);
         if (kind === "External module") {
