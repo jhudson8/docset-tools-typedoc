@@ -169,6 +169,16 @@ const plugin: Plugin = {
               url = `typedoc/${folder}/${parent.baseUrl}#${pathName}`;
             }
           } else if (!parent.baseUrl.includes(".html")) {
+            if (folder === "modules") {
+              // special case
+              pathName =
+                "_" +
+                pathName
+                  .replace(/^_/, "")
+                  .replace(/_$/, "")
+                  .replace("/-/g", "_") +
+                "_";
+            }
             url = `typedoc/${folder}/${parent.baseUrl}.${pathName}.html`;
             baseUrl = `${parent.baseUrl}.${pathName}.html`;
           } else if (!parent.baseUrl.includes("#")) {
