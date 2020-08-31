@@ -176,7 +176,7 @@ const plugin: Plugin = {
                 pathName
                   .replace(/^_/, "")
                   .replace(/_$/, "")
-                  .replace("/-/g", "_") +
+                  .replace(/-/g, "_") +
                 "_";
             }
             url = `typedoc/${folder}/${parent.baseUrl}.${pathName}.html`;
