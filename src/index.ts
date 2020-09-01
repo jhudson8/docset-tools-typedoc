@@ -61,7 +61,7 @@ const plugin: Plugin = {
           if (child.name.match(/\"index\"/)) {
             keepers[child.id] = {
               id: child.id,
-              exportedAs: "_index_",
+              exportedAs: "index",
             };
             // find all the exported modules
             for (let j = 0; j < child.children.length; j++) {
@@ -79,7 +79,7 @@ const plugin: Plugin = {
       }
 
       let isParentIncluded = parent ? keepers[parent.id] : undefined;
-      if (isParentIncluded && isParentIncluded.exportedAs === "_index_") {
+      if (isParentIncluded && isParentIncluded.exportedAs === "index") {
         // even though this is included and all submodules from the code above
         // we want to reuse the "not included" logic for this special case
         isParentIncluded = undefined;
@@ -137,7 +137,7 @@ const plugin: Plugin = {
         if (isKeeper && isKeeper.exportedAs) {
           name = isKeeper.exportedAs;
         }
-        let pathName = name.replace(/\/|\./g, "_").toLowerCase();
+        let pathName = name.replace(/[\/|\.-]/g, "_").toLowerCase();
         name = name.replace(/^_/, "").replace(/_$/, "");
         const useParentInfo =
           parent && !parent.data.kindString.match(/module/i);
@@ -169,16 +169,6 @@ const plugin: Plugin = {
               url = `typedoc/${folder}/${parent.baseUrl}#${pathName}`;
             }
           } else if (!parent.baseUrl.includes(".html")) {
-            if (folder === "modules") {
-              // special case
-              pathName =
-                "_" +
-                pathName
-                  .replace(/^_/, "")
-                  .replace(/_$/, "")
-                  .replace(/-/g, "_") +
-                "_";
-            }
             url = `typedoc/${folder}/${parent.baseUrl}.${pathName}.html`;
             baseUrl = `${parent.baseUrl}.${pathName}.html`;
           } else if (!parent.baseUrl.includes("#")) {
@@ -202,7 +192,7 @@ const plugin: Plugin = {
               parent: {
                 name,
                 docsetEntryType: type,
-                baseUrl,
+                baseUrl: !parent || !parent.baseUrl ? `_${baseUrl}_` : baseUrl,
                 level: parent ? parent.level + 1 : 1,
                 data,
                 folder,
