@@ -146,7 +146,7 @@ const plugin: Plugin = {
           pathName = pathName.substring(1);
         }
 
-        let baseUrl = pathName;
+        let baseUrl = `_${pathName}_`;
         let url = `typedoc/${dictValue.folder}/${baseUrl}.html`;
         let type: DocsetEntryType =
           useParentInfo && parent
@@ -169,6 +169,12 @@ const plugin: Plugin = {
               url = `typedoc/${folder}/${parent.baseUrl}#${pathName}`;
             }
           } else if (!parent.baseUrl.includes(".html")) {
+            if (folder === "modules" && parent.baseUrl === "_index_") {
+              // special case
+              url = `typedoc/${folder}/_${pathName}_.html`;
+              baseUrl = `_${pathName}_.html`;
+              parent.level = parent.level - 1;
+            }
             url = `typedoc/${folder}/${parent.baseUrl}.${pathName}.html`;
             baseUrl = `${parent.baseUrl}.${pathName}.html`;
           } else if (!parent.baseUrl.includes("#")) {
@@ -177,7 +183,7 @@ const plugin: Plugin = {
           }
         }
 
-        if (isKeeper) {
+        if (isKeeper && !data.target) {
           if (!rtn[type]) {
             rtn[type] = {};
           }
@@ -192,7 +198,7 @@ const plugin: Plugin = {
               parent: {
                 name,
                 docsetEntryType: type,
-                baseUrl: !parent || !parent.baseUrl ? `_${baseUrl}_` : baseUrl,
+                baseUrl,
                 level: parent ? parent.level + 1 : 1,
                 data,
                 folder,
