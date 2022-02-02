@@ -29,9 +29,9 @@
   "dependencies": {
     "docset-tools-types": "^0.0.20",
     "fs-extra": "^9.0.1",
-    "typedoc": "^0.17.0-3"
+    "typedoc": "^0.19.2"
   },
   "peerDependencies": {
-    "typescript": ">=3.0.0 <=3.9.7"
+    "typescript": ">=3.0.0"
   }
 }
