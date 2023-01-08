@@ -3,7 +3,6 @@ import kinds from "./kinds";
 import { join } from "path";
 import { TypescriptMetadata } from "./types";
 const Typedoc = require("typedoc");
-
 const plugin: Plugin = {
   execute: async function ({ createTmpFolder, include, pluginOptions }) {
     pluginOptions = { ...pluginOptions };

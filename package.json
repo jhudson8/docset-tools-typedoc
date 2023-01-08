@@ -21,15 +21,15 @@
   },
   "homepage": "https://github.com/jhudson8/docset-tools-typedoc#readme",
   "devDependencies": {
-    "@types/fs-extra": "^9.0.1",
-    "@types/node": "^14.0.27",
-    "docset-tools-creator": "^0.0.14",
-    "typescript": "^3.9.7"
+    "@types/fs-extra": "^9.0.13",
+    "@types/node": "^18.11.18",
+    "docset-tools-creator": "^1.0.0",
+    "typescript": "^4.9.4"
   },
   "dependencies": {
-    "docset-tools-types": "^0.0.20",
-    "fs-extra": "^9.0.1",
-    "typedoc": "^0.19.2"
+    "docset-tools-types": "^1.0.0",
+    "fs-extra": "^11.1.0",
+    "typedoc": "^0.23.24"
   },
   "peerDependencies": {
     "typescript": ">=3.0.0"
