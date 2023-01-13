@@ -236,6 +236,7 @@ const plugin: Plugin = {
     await include({
       path: tempDir,
       rootDirName: "typedoc",
+      remove: true
       // appendToBottom: {
       //   "assets/css/main.css": `
       //     .col-menu { display: none !important; }
