@@ -2,38 +2,45 @@ import { Plugin, normalizePath, DocsetEntryType } from "docset-tools-types";
 import kinds from "./kinds";
 import { join } from "path";
 import { TypescriptMetadata } from "./types";
-const Typedoc = require("typedoc");
+import { spawn } from 'child_process';
+
 const plugin: Plugin = {
   execute: async function ({ createTmpFolder, include, pluginOptions }) {
     pluginOptions = { ...pluginOptions };
-    const entryPoints = (pluginOptions.entryPoint || ["src/index.ts"]).map(
-      normalizePath
-    );
-    const app = new Typedoc.Application();
-    app.options.addReader(new Typedoc.TSConfigReader());
-    app.options.addReader(new Typedoc.TypeDocReader());
-    app.bootstrap({
-      mode: "library",
-      excludePrivate: true,
-      moduleResolution: "node",
-      target: "esnext",
-      jsx: "preserve",
-      experimentalDecorators: true,
-      ...pluginOptions.typedocOptions,
+    const tempFolder = await createTmpFolder();
+    const jsonPath = join(tempFolder, 'ts-docs.json');
+    const tempDir = join(tempFolder, 'ts-docs');
+    const entryPoint = process.cwd() + "/src/index.ts";
+
+    let rtn: any = {};
+
+    await new Promise((resolve, reject) => {
+      const child = spawn(process.cwd() + '/node_modules/.bin/typedoc', [entryPoint, '--json', jsonPath]);
+      child.stdout.on('error', (data) => {
+        console.log(`typedoc:\n${data}`);
+      });
+      child.on('exit', function(code){
+        if (code === 0) {
+          resolve(undefined);
+        } else {
+          reject('Error code: ' + code);
+        }
+      });
     });
 
-    const tempDir = await createTmpFolder();
-    const rtn: any = {};
-    const project = app.convert(app.expandInputFiles(entryPoints));
-    if (!project) {
-      throw new Error(
-        "Could not create typedoc project: check source paths " +
-          entryPoints.join(", ")
-      );
-    }
-    const jsonFile = join(tempDir, "typedoc.json");
-    app.generateDocs(project, tempDir);
-    app.generateJson(project, jsonFile);
+    await new Promise((resolve, reject) => {
+      const child = spawn(process.cwd() + '/node_modules/.bin/typedoc', [entryPoint, '--out', tempDir]);
+      child.stdout.on('error', (data) => {
+        console.log(`typedoc:\n${data}`);
+      });
+      child.on('exit', function(code){
+        if (code === 0) {
+          resolve(undefined);
+        } else {
+          reject('Error code: ' + code);
+        }
+      });
+    });
 
     // find all of the modules that we want to show in outline view
     // find the index module of root and keep a reference to all the modules (and find their dependencies)
@@ -124,6 +131,12 @@ const plugin: Plugin = {
             moduleName,
           });
         });
+      } else if (kind === 'Project' && data.children) {
+        data.children.forEach((child: TypescriptMetadata) => {
+          iterate({
+            data: child
+          });
+        });
       } else {
         const dictValue = kinds[data.kindString];
         if (!dictValue) {
@@ -182,7 +195,7 @@ const plugin: Plugin = {
           }
         }
 
-        if (isKeeper && !data.target) {
+        if (!data.target) {
           if (!rtn[type]) {
             rtn[type] = {};
           }
@@ -207,7 +220,9 @@ const plugin: Plugin = {
         }
       }
     };
-    const data = require(jsonFile);
+
+    const data = require(jsonPath);
+
     try {
       iterateForDiscovery({ data, indexOnly: true });
       iterateForDiscovery({ data });
@@ -228,6 +243,13 @@ const plugin: Plugin = {
         `,
       },
     });
+
+    // FIXME need to figure out the new structure to create valid nav entries
+    rtn = {
+      [DocsetEntryType.Section]: {
+        ['Typescript Docs']: 'typedoc/index.html'
+      }
+    };
 
     return {
       entries: rtn,
