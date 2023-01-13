@@ -236,12 +236,12 @@ const plugin: Plugin = {
     await include({
       path: tempDir,
       rootDirName: "typedoc",
-      appendToBottom: {
-        "assets/css/main.css": `
-          .col-menu { display: none !important; }
-          .col-content { width: 100% !important; }
-        `,
-      },
+      // appendToBottom: {
+      //   "assets/css/main.css": `
+      //     .col-menu { display: none !important; }
+      //     .col-content { width: 100% !important; }
+      //   `,
+      // },
     });
 
     // FIXME need to figure out the new structure to create valid nav entries
